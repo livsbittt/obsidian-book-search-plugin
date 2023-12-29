@@ -13,6 +13,11 @@ import {
 } from '@utils/template';
 import { replaceVariableSyntax, makeFileName, applyDefaultFrontMatter, toStringFrontMatter } from '@utils/utils';
 
+// Sanitization function to clean filenames
+function sanitizeFilename(title) {
+  return title.replace(/[\\/:*?"<>|]/g, '_');
+}
+
 export default class BookSearchPlugin extends Plugin {
   settings: BookSearchPluginSettings;
 
@@ -116,7 +121,7 @@ export default class BookSearchPlugin extends Plugin {
 
       // TODO: If the same file exists, it asks if you want to overwrite it.
       // create new File
-      const fileName = makeFileName(book, this.settings.fileNameFormat);
+      const fileName = sanitizeFilename(makeFileName(book, this.settings.fileNameFormat));
       const filePath = `${this.settings.folder}/${fileName}`;
       const targetFile = await this.app.vault.create(filePath, renderedContents);
 
